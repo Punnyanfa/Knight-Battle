@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class Knight : MonoBehaviour
 {
-    public float walkSpeed = 3f;
+    public float walkAcceleration = 3f;
+    public float maxSpeed = 3f;
     public float walkStopRate = 0.05f;
     public DetectionZone attackZone;
 
@@ -47,6 +48,15 @@ public class Knight : MonoBehaviour
             return animator.GetBool(AnimationStrings.canMove);
         } }
 
+/*    public float AttackCoolDown { get
+        {
+            return animator.GetFloat(AnimationStrings.attackCoolDown);
+        } private set
+        {
+            animator.SetFloat(AnimationStrings.attackCoolDown, Mathf.Max(value, 0));
+        }
+    }*/
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -68,10 +78,19 @@ public class Knight : MonoBehaviour
         }
         if (!damageable.LockVelocity)
         {
-         if(CanMove)
-           rb.velocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.velocity.y);
-         else
-           rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
+         if(CanMove && touchingDirection.IsGrounded)
+            {
+                // Accelerate towards max Speed
+                rb.velocity = new Vector2(
+                Mathf.Clamp(rb.velocity.x + (walkAcceleration * walkDirectionVector.x * Time.fixedDeltaTime), -maxSpeed, maxSpeed),
+                rb.velocity.y);
+            }
+               
+            else
+            {
+                rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
+            }
+          
         }
        
     }
