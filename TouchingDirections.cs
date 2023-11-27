@@ -1,7 +1,4 @@
 using Assets.Scripts;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 
 public class TouchingDirections : MonoBehaviour
